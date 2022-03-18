@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homepay/constants/routes.dart';
+import 'package:homepay/services/auth/auth_service.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -61,7 +62,24 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           const SizedBox(height: 2),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
+
+              try {
+                await AuthService.firebase().createuser(
+                  email: email,
+                  password: password,
+                );
+
+                final user = AuthService.firebase().currentUser;
+                AuthService.firebase().sendEmailVerification();
+                Navigator.of(context).pushNamed(verifyEmailRoute);
+              } catch (e) {
+                // TODO: Display error dialog
+                print(e);
+              }
+            },
             child: const Text('Register'),
             style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 16)),
