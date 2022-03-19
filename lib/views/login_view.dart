@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homepay/constants/routes.dart';
+import 'package:homepay/services/auth/auth_service.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -61,7 +62,29 @@ class _LoginViewState extends State<LoginView> {
           ),
           const SizedBox(height: 2),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
+
+              try {
+                await AuthService.firebase()
+                    .logIn(email: email, password: password);
+
+                final user = AuthService.firebase().currentUser;
+                if (user != null) {
+                  if (user.isEmailVerified) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(homeRoute, (route) => false);
+                  } else {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        verifyEmailRoute, (route) => false);
+                  }
+                }
+              } catch (e) {
+                // TODO: Implement error dialogs
+                print(e);
+              }
+            },
             child: const Text('Login'),
             style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 16)),
@@ -72,7 +95,7 @@ class _LoginViewState extends State<LoginView> {
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(registerRoute, (route) => false);
               },
-              child: const Text('New User? Register Here'))
+              child: const Text('New User? Sign Up'))
         ],
       )),
     );

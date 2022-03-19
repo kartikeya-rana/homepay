@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:homepay/constants/routes.dart';
 import 'package:homepay/services/auth/auth_service.dart';
-import 'package:homepay/views/home_view.dart';
+import 'package:homepay/views/home/home_view.dart';
+import 'package:homepay/views/home/new_house_view.dart';
 import 'package:homepay/views/login_view.dart';
 import 'package:homepay/views/register_view.dart';
 import 'package:homepay/views/verify_email_view.dart';
@@ -16,6 +17,7 @@ void main() {
       registerRoute: (context) => const RegisterView(),
       verifyEmailRoute: (context) => const VerifyEmailView(),
       homeRoute: (context) => const HomeView(),
+      addNewHouseRoute: (context) =>  const NewHouseView(),
     },
   ));
 }
