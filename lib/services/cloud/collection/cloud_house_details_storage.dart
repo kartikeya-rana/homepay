@@ -4,7 +4,7 @@ import 'package:homepay/services/cloud/cloud_storage_exceptions.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details.dart';
 
 class CloudHouseStorage {
-  final houses = FirebaseFirestore.instance.collection('house_details');
+  final houses = FirebaseFirestore.instance.collection(houseCollectionName);
 
   // Singleton
   static final CloudHouseStorage _shared = CloudHouseStorage._sharedInstance();

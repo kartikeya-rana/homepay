@@ -10,14 +10,16 @@ import 'package:homepay/views/verify_email_view.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
-    theme: ThemeData(primarySwatch: Colors.teal),
+    theme: ThemeData(
+      primarySwatch: Colors.teal,
+    ),
     home: const RootPage(),
     routes: {
       loginRoute: (context) => const LoginView(),
       registerRoute: (context) => const RegisterView(),
       verifyEmailRoute: (context) => const VerifyEmailView(),
       homeRoute: (context) => const HomeView(),
-      addNewHouseRoute: (context) =>  const NewHouseView(),
+      addNewHouseRoute: (context) => const NewHouseView(),
     },
   ));
 }

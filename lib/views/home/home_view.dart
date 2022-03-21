@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:homepay/views/home/card_view.dart';
+import 'package:homepay/views/home/payment_history_view.dart';
+import 'package:homepay/views/home/reward_view.dart';
 
 const List<Widget> _pages = <Widget>[
   CardView(),
-  Icon(
-    Icons.camera,
-    size: 150,
-  ),
-  Icon(
-    Icons.chat,
-    size: 150,
-  ),
+  PaymentHistoryView(),
+  RewardView(),
 ];
 
 class HomeView extends StatefulWidget {
@@ -26,7 +22,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home View')),
+      appBar: AppBar(title: const Text('Home Pay')),
       body: Center(
         child: _pages.elementAt(_currentIndex), //New
       ),
@@ -40,7 +36,7 @@ class _HomeViewState extends State<HomeView> {
           const BottomNavigationBarItem(
               icon: Icon(Icons.monetization_on), label: 'History'),
           const BottomNavigationBarItem(
-              icon: Icon(Icons.person_rounded), label: 'Profile'),
+              icon: Icon(Icons.star_rate_rounded), label: 'Rewards'),
         ],
         onTap: (value) {
           setState(() {

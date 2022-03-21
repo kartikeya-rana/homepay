@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:homepay/constants/routes.dart';
 import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details.dart';
-import 'package:homepay/services/cloud/collection/cloud_house_storage.dart';
+import 'package:homepay/services/cloud/collection/cloud_house_details_storage.dart';
+import 'package:homepay/services/cloud/collection/cloud_rewards_storage.dart';
 import 'package:homepay/views/home/house_list_view.dart';
 import 'package:homepay/views/home/new_house_view.dart';
 
@@ -23,8 +24,10 @@ class _CardViewState extends State<CardView> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(children: [
@@ -33,9 +36,6 @@ class _CardViewState extends State<CardView> {
               stream: _houseService.allHouses(userId: userId),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return const Text('No House Found');
-
                   case ConnectionState.waiting:
                   case ConnectionState.active:
                     if (snapshot.hasData) {
@@ -49,11 +49,15 @@ class _CardViewState extends State<CardView> {
                         },
                       );
                     } else {
-                      return const CircularProgressIndicator();
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
 
                   default:
-                    return const CircularProgressIndicator();
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
                 }
               }),
         ),

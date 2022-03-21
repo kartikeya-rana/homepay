@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details.dart';
-import 'package:homepay/services/cloud/collection/cloud_house_storage.dart';
+import 'package:homepay/services/cloud/collection/cloud_house_details_storage.dart';
 
 class NewHouseView extends StatefulWidget {
   const NewHouseView({Key? key}) : super(key: key);
@@ -120,8 +120,13 @@ class _NewHouseViewState extends State<NewHouseView> {
                 initialValue: _rentAmount.toString(),
                 enabled: _isFormEnabled,
                 decoration: const InputDecoration(labelText: 'Rent Amount'),
-                onChanged: (text) =>
-                    setState(() => _rentAmount = int.parse(text)),
+                onChanged: (text) {
+                  if (text != '') {
+                    setState(() => _rentAmount = int.parse(text));
+                  } else {
+                    setState(() => _rentAmount = 0);
+                  }
+                },
               ),
               // TextFormField(
               //     decoration: const InputDecoration(labelText: 'Due Date'),
