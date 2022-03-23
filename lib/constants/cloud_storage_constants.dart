@@ -11,10 +11,11 @@ const houseCountryField = 'country';
 const houseRentAmountField = 'rent_amount';
 const houseDueDateField = 'due_date';
 const houseDateCreatedField = 'date_created';
+const houseOwnerIdField = 'owner_id';
 
 // Owner Details Constants
 const ownerCollectionName = 'owner_details';
-const houseIdField = 'house_id';
+const ownerUserIdField = 'user_id';
 const ownerNameField = 'owner_name';
 const ownerNumberField = 'owner_number';
 const ownerAccountHolderNameField = 'acount_holder_name';

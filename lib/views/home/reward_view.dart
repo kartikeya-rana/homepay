@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/services/cloud/collection/cloud_rewards.dart';
 import 'package:homepay/services/cloud/collection/cloud_rewards_storage.dart';
@@ -46,31 +47,97 @@ class RewardListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      ListTile(
-        title: const Text(
-          'Rewards Earned',
-          style: TextStyle(fontSize: 18),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: primaryColor,
+            boxShadow: const <BoxShadow>[
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 2,
+                spreadRadius: 1.5,
+              ),
+            ],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Wrap(children: [
+            Column(children: [
+              ListTile(
+                title: const Text(
+                  'Rewards Earned',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+                trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                  const Icon(
+                    Icons.offline_bolt,
+                    color: secondaryColor,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(reward.rewardsEarned.toString(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: secondaryColor,
+                      )),
+                ]),
+              ),
+              ListTile(
+                title: const Text(
+                  'Rewards Used',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+                trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                  const Icon(
+                    Icons.offline_bolt,
+                    color: secondaryColor,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(reward.rewardsUsed.toString(),
+                      style:
+                          const TextStyle(fontSize: 18, color: secondaryColor)),
+                ]),
+              ),
+            ]),
+          ]),
         ),
-        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.local_atm),
-          const SizedBox(width: 10),
-          Text(reward.rewardsEarned.toString(),
-              style: const TextStyle(fontSize: 18)),
-        ]),
-      ),
-      ListTile(
-        title: const Text(
-          'Rewards Used',
-          style: TextStyle(fontSize: 18),
+        SizedBox(
+          height: 10,
         ),
-        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.local_atm),
-          const SizedBox(width: 10),
-          Text(reward.rewardsUsed.toString(),
-              style: const TextStyle(fontSize: 18)),
-        ]),
-      )
-    ]);
+        Container(
+          decoration: BoxDecoration(
+            color: primaryColor,
+            boxShadow: const <BoxShadow>[
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 2,
+                spreadRadius: 1.5,
+              ),
+            ],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: ListTile(
+            leading: const Icon(
+              Icons.store,
+              color: secondaryColor,
+              size: 40,
+            ),
+            title: const Text(
+              'Store',
+              style: TextStyle(
+                  fontSize: 22,
+                  color: secondaryColor,
+                  fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              'Offers coming soon...',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

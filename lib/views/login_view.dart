@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/constants/routes.dart';
 import 'package:homepay/services/auth/auth_service.dart';
+import 'package:homepay/services/cloud/collection/cloud_rewards_storage.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -30,7 +32,15 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('HomePay')),
+      appBar: AppBar(
+          title: const Text(
+        'HomePay',
+        style: TextStyle(
+          color: secondaryColor,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+      )),
       body: Center(
           child: Column(
         children: [
@@ -43,8 +53,15 @@ class _LoginViewState extends State<LoginView> {
               controller: _email,
               decoration: const InputDecoration(
                 labelText: 'Email Address',
+                labelStyle: TextStyle(color: loginFormlabelColor),
                 border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: loginFormBorderColor)),
               ),
+              style: const TextStyle(color: loginFormInputColor),
+              autocorrect: false,
+              enableSuggestions: true,
+              keyboardType: TextInputType.emailAddress,
             ),
           ),
           const SizedBox(height: 2),
@@ -54,10 +71,16 @@ class _LoginViewState extends State<LoginView> {
               controller: _password,
               decoration: const InputDecoration(
                 labelText: 'Password',
+                labelStyle: TextStyle(color: loginFormlabelColor),
                 border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: loginFormBorderColor)),
               ),
+              style: const TextStyle(color: loginFormInputColor),
               autocorrect: false,
               enableSuggestions: false,
+              obscureText: true,
+              obscuringCharacter: '*',
             ),
           ),
           const SizedBox(height: 2),
@@ -71,8 +94,18 @@ class _LoginViewState extends State<LoginView> {
                     .logIn(email: email, password: password);
 
                 final user = AuthService.firebase().currentUser;
+
                 if (user != null) {
                   if (user.isEmailVerified) {
+                    final CloudRewardsStorage _rewardService =
+                        CloudRewardsStorage();
+                    final rewardNotAvailable =
+                        await _rewardService.isRewardProfile(userId: user.id);
+
+                    if (rewardNotAvailable) {
+                      await _rewardService.createNewUserRewards(
+                          userId: user.id);
+                    }
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil(homeRoute, (route) => false);
                   } else {
@@ -87,7 +120,7 @@ class _LoginViewState extends State<LoginView> {
             },
             child: const Text('Login'),
             style: ElevatedButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 16)),
+                textStyle: const TextStyle(fontSize: 18)),
           ),
           const SizedBox(height: 2),
           TextButton(

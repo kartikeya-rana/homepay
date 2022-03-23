@@ -12,9 +12,10 @@ class CloudHouseStorage {
   factory CloudHouseStorage() => _shared;
 
   // Create New House
-  Future<CloudHouseDetails> createNewHouse({
+  Future<void> createNewHouse({
     required String userId,
     required String nickname,
+    required String ownerId,
     required String address1,
     required String address2,
     required String city,
@@ -24,33 +25,23 @@ class CloudHouseStorage {
     required DateTime dueDate,
     required DateTime dateCreated,
   }) async {
-    final house = await houses.add({
-      userIdField: userId,
-      houseNicknameField: nickname,
-      houseAddress1Field: address1,
-      houseAddress2Field: address2,
-      houseCityField: city,
-      houseStateField: state,
-      houseCountryField: country,
-      houseRentAmountField: rentAmount,
-      houseDueDateField: dueDate,
-      houseDateCreatedField: dateCreated,
-    });
-
-    final fetchedHouse = await house.get();
-
-    return CloudHouseDetails(
-        documentId: fetchedHouse.id,
-        userId: userId,
-        nickname: nickname,
-        address1: address1,
-        address2: address2,
-        city: city,
-        state: state,
-        country: country,
-        rentAmount: rentAmount,
-        dueDate: dueDate,
-        dateCreated: dateCreated);
+    try {
+      await houses.add({
+        userIdField: userId,
+        houseOwnerIdField: ownerId,
+        houseNicknameField: nickname,
+        houseAddress1Field: address1,
+        houseAddress2Field: address2,
+        houseCityField: city,
+        houseStateField: state,
+        houseCountryField: country,
+        houseRentAmountField: rentAmount,
+        houseDueDateField: dueDate,
+        houseDateCreatedField: dateCreated,
+      });
+    } catch (e) {
+      throw CouldNotCreateHouseException();
+    }
   }
 
   Future<Iterable<CloudHouseDetails>> getHouses(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/constants/routes.dart';
 import 'package:homepay/services/auth/auth_service.dart';
 
@@ -43,8 +44,15 @@ class _RegisterViewState extends State<RegisterView> {
               controller: _email,
               decoration: const InputDecoration(
                 labelText: 'Email Address',
+                labelStyle: TextStyle(color: loginFormlabelColor),
                 border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: loginFormBorderColor)),
               ),
+              style: const TextStyle(color: loginFormInputColor),
+              autocorrect: false,
+              enableSuggestions: true,
+              keyboardType: TextInputType.emailAddress,
             ),
           ),
           const SizedBox(height: 2),
@@ -54,10 +62,16 @@ class _RegisterViewState extends State<RegisterView> {
               controller: _password,
               decoration: const InputDecoration(
                 labelText: 'Password',
+                labelStyle: TextStyle(color: loginFormlabelColor),
                 border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: loginFormBorderColor)),
               ),
+              style: const TextStyle(color: loginFormInputColor),
               autocorrect: false,
               enableSuggestions: false,
+              obscureText: true,
+              obscuringCharacter: '*',
             ),
           ),
           const SizedBox(height: 2),
@@ -71,10 +85,9 @@ class _RegisterViewState extends State<RegisterView> {
                   email: email,
                   password: password,
                 );
-
-                final user = AuthService.firebase().currentUser;
                 AuthService.firebase().sendEmailVerification();
-                Navigator.of(context).pushNamed(verifyEmailRoute);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    verifyEmailRoute, (route) => false);
               } catch (e) {
                 // TODO: Display error dialog
                 print(e);
@@ -90,7 +103,7 @@ class _RegisterViewState extends State<RegisterView> {
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(loginRoute, (route) => false);
               },
-              child: const Text('Already Registered? SignIn'))
+              child: const Text('Already Registered? Sign In'))
         ],
       )),
     );

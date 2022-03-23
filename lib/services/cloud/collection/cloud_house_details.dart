@@ -4,6 +4,7 @@ import 'package:homepay/constants/cloud_storage_constants.dart';
 class CloudHouseDetails {
   final String documentId;
   final String userId;
+  final String ownerId;
   final String nickname;
   final String address1;
   final String address2;
@@ -17,6 +18,7 @@ class CloudHouseDetails {
   CloudHouseDetails(
       {required this.documentId,
       required this.userId,
+      required this.ownerId,
       required this.nickname,
       required this.address1,
       required this.address2,
@@ -31,6 +33,7 @@ class CloudHouseDetails {
       QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
       : documentId = snapshot.id,
         userId = snapshot.data()[userIdField],
+        ownerId = snapshot.data()[houseOwnerIdField],
         nickname = snapshot.data()[houseNicknameField] as String,
         address1 = snapshot.data()[houseAddress1Field] as String,
         address2 = snapshot.data()[houseAddress2Field] as String,

@@ -29,11 +29,9 @@ class FirebaseAuthProvider implements AuthProvider {
         case 'invalid-email':
           throw InvalidEmailException();
         default:
-          print(e.code);
           throw GenericAuthException();
       }
     } catch (e) {
-      print(e);
       throw GenericAuthException();
     }
   }

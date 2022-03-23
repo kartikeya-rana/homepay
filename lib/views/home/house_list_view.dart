@@ -22,13 +22,20 @@ class HousesListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
         itemCount: houses.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 10),
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: ((context, index) {
           final house = houses.elementAt(index);
           return Container(
-            height: 150,
+            height: 130,
             // padding: const EdgeInsets.all(),
             decoration: BoxDecoration(
+              boxShadow: const <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 4,
+                  spreadRadius: 1.5,
+                ),
+              ],
               borderRadius: BorderRadius.circular(8),
               image: const DecorationImage(
                 image: NetworkImage(
@@ -38,8 +45,8 @@ class HousesListView extends StatelessWidget {
               ),
             ),
             child: Card(
-              color: Colors.transparent,
               shadowColor: Colors.transparent,
+              color: Colors.transparent,
               // shape: RoundedRectangleBorder(
               //   // borderRadius: BorderRadius.circular(8.0),
               // ),
@@ -64,15 +71,6 @@ class HousesListView extends StatelessWidget {
                         textAlign: TextAlign.left,
                       ),
                     ),
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   child: Text(
-                    //     house.country,
-                    //     style: const TextStyle(
-                    //         fontSize: 16, fontWeight: FontWeight.bold),
-                    //     textAlign: TextAlign.left,
-                    //   ),
-                    // ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -134,7 +132,7 @@ Future<dynamic> payRentButton(BuildContext context, CloudHouseDetails house) {
 
                       final DateTime now = DateTime.now();
 
-                      _paymentService.createNewPayment(
+                      await _paymentService.createNewPayment(
                           userId: currentUser.id,
                           houseId: house.documentId,
                           ownerId: '',
@@ -147,10 +145,12 @@ Future<dynamic> payRentButton(BuildContext context, CloudHouseDetails house) {
                       final int rewardsEarned =
                           int.parse(_rentAmount) + rewardDetails.rewardsEarned;
 
-                      _rewardService.updateRewards(
+                      await _rewardService.updateRewards(
                           documentId: rewardDetails.documentId,
                           rewardsUsed: rewardDetails.rewardsUsed,
                           rewardsEarned: rewardsEarned);
+
+                      Navigator.of(context).pop();
                     },
                     child: const Text(
                       'Pay',

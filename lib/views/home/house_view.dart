@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/constants/routes.dart';
 import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details.dart';
@@ -7,14 +8,14 @@ import 'package:homepay/services/cloud/collection/cloud_rewards_storage.dart';
 import 'package:homepay/views/home/house_list_view.dart';
 import 'package:homepay/views/home/new_house_view.dart';
 
-class CardView extends StatefulWidget {
-  const CardView({Key? key}) : super(key: key);
+class HouseView extends StatefulWidget {
+  const HouseView({Key? key}) : super(key: key);
 
   @override
-  State<CardView> createState() => _CardViewState();
+  State<HouseView> createState() => _HouseViewState();
 }
 
-class _CardViewState extends State<CardView> {
+class _HouseViewState extends State<HouseView> {
   late final CloudHouseStorage _houseService;
   String get userId => AuthService.firebase().currentUser!.id;
 
@@ -24,13 +25,49 @@ class _CardViewState extends State<CardView> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(children: [
+    return Column(
+      children: [
+        Container(
+          // padding: const EdgeInsets.all(),
+          decoration: BoxDecoration(
+              boxShadow: const <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 4,
+                  spreadRadius: 1.5,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(8),
+              color: rentalCardBackground),
+          child: const Card(
+            shadowColor: Colors.transparent,
+            color: Colors.transparent,
+            child: ListTile(
+                title: Text(
+                  'Rental Credit Score',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  ),
+                ),
+                subtitle: Text(
+                  'Score is calculated based upon on timely payments, rental history, and rental amount.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white54,
+                    overflow: TextOverflow.visible,
+                  ),
+                ),
+                contentPadding: EdgeInsets.all(8)),
+            elevation: 2,
+          ),
+        ),
+        SizedBox(
+          height: 12,
+        ),
         Expanded(
           child: StreamBuilder(
               stream: _houseService.allHouses(userId: userId),
@@ -61,13 +98,13 @@ class _CardViewState extends State<CardView> {
                 }
               }),
         ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(addNewHouseRoute);
-          },
-          child: const Text('Add Rental'),
-        ),
-      ]),
+        // ElevatedButton(
+        //   onPressed: () {
+        //     Navigator.of(context).pushNamed(addNewHouseRoute);
+        //   },
+        //   child: const Text('Add Rental'),
+        // ),
+      ],
     );
   }
 }
