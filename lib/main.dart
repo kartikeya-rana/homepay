@@ -13,12 +13,12 @@ void main() {
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       primarySwatch: Colors.teal,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: Color.fromARGB(255, 22, 27, 39),
         elevation: 0,
       ),
-      scaffoldBackgroundColor: Color.fromARGB(255, 22, 27, 39),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      scaffoldBackgroundColor: const Color.fromARGB(255, 22, 27, 39),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Color.fromARGB(255, 22, 27, 39),
           unselectedItemColor: Colors.white),
     ),

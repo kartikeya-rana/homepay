@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:homepay/services/auth/auth_service.dart';
+import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details.dart';
-import 'package:homepay/services/cloud/collection/cloud_payment_history_storage.dart';
-import 'package:homepay/services/cloud/collection/cloud_rewards.dart';
-import 'package:homepay/services/cloud/collection/cloud_rewards_storage.dart';
+import 'package:homepay/views/home/pay_rent_bottom_sheet_view.dart';
 
 typedef HouseCallback = void Function(CloudHouseDetails house);
 
@@ -37,12 +35,16 @@ class HousesListView extends StatelessWidget {
                 ),
               ],
               borderRadius: BorderRadius.circular(8),
-              image: const DecorationImage(
-                image: NetworkImage(
-                    "https://images.unsplash.com/photo-1507692984170-ff22288b21cf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=985&q=80"),
-                fit: BoxFit.cover,
-                opacity: 0.9,
-              ),
+              gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    secondaryColor,
+                    Colors.teal.shade700,
+                    primaryColor,
+                    Colors.black45,
+                    Colors.black87,
+                  ]),
             ),
             child: Card(
               shadowColor: Colors.transparent,
@@ -83,7 +85,16 @@ class HousesListView extends StatelessWidget {
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
                       ),
-                      onPressed: () => payRentButton(context, house),
+                      onPressed: () {
+                        // payRentButton(context, house);
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return PayRentBottomSheetView(
+                                house: house,
+                              );
+                            });
+                      },
                     )),
                   ]),
                 ),
@@ -93,72 +104,4 @@ class HousesListView extends StatelessWidget {
           );
         }));
   }
-}
-
-Future<dynamic> payRentButton(BuildContext context, CloudHouseDetails house) {
-  final _formKey = GlobalKey<FormState>();
-  String _rentAmount = house.rentAmount.toString();
-
-  return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Wrap(
-          children: [
-            const ListTile(
-              // contentPadding: EdgeInsets.all(0),
-              leading: Icon(Icons.real_estate_agent_outlined),
-              title: Text(
-                'Rental Amount',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            Form(
-                key: _formKey,
-                child: TextFormField(
-                  initialValue: _rentAmount,
-                  textAlign: TextAlign.center,
-                  onChanged: (value) => _rentAmount = value,
-                )),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 2, 0, 20),
-              child: Center(
-                child: ElevatedButton(
-                    onPressed: () async {
-                      final CloudPaymentHistoryStorage _paymentService =
-                          CloudPaymentHistoryStorage();
-                      final CloudRewardsStorage _rewardService =
-                          CloudRewardsStorage();
-                      final currentUser = AuthService.firebase().currentUser!;
-
-                      final DateTime now = DateTime.now();
-
-                      await _paymentService.createNewPayment(
-                          userId: currentUser.id,
-                          houseId: house.documentId,
-                          ownerId: '',
-                          amountPaid: int.parse(_rentAmount),
-                          paymentDate: now);
-
-                      final rewardDetails = await _rewardService
-                          .getRewardDetails(userId: currentUser.id);
-
-                      final int rewardsEarned =
-                          int.parse(_rentAmount) + rewardDetails.rewardsEarned;
-
-                      await _rewardService.updateRewards(
-                          documentId: rewardDetails.documentId,
-                          rewardsUsed: rewardDetails.rewardsUsed,
-                          rewardsEarned: rewardsEarned);
-
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text(
-                      'Pay',
-                      style: TextStyle(fontSize: 16),
-                    )),
-              ),
-            ),
-          ],
-        );
-      });
 }

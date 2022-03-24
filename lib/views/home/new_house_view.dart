@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homepay/constants/cloud_storage_constants.dart';
 import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details.dart';
@@ -18,7 +19,7 @@ class _NewHouseViewState extends State<NewHouseView> {
 
   late final CloudHouseStorage _houseService;
   late final CloudOwnerStorage _ownerService;
-  late final CloudHouseDetails _house;
+  late final CloudHouseDetails house;
 
   String _nickname = '';
   String _address1 = '';
@@ -44,7 +45,7 @@ class _NewHouseViewState extends State<NewHouseView> {
     super.initState();
   }
 
-  Future<void> _save() async {
+  Future<bool> _save() async {
     // validate all the form fields
     if (_formKey.currentState!.validate()) {
       final _currentUser = AuthService.firebase().currentUser!;
@@ -74,6 +75,33 @@ class _NewHouseViewState extends State<NewHouseView> {
           rentAmount: int.parse(_rentAmount),
           dueDate: _now,
           dateCreated: _now);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<void> createOrInsertDetails(arguments) async {
+    if (arguments != null) {
+      house = arguments as CloudHouseDetails;
+      final owner =
+          await _ownerService.getOwnerDetails(documentId: house.ownerId);
+
+      _nickname = house.nickname;
+      _address1 = house.address1;
+      _address2 = house.address2;
+      _city = house.city;
+      _state = house.state;
+      _country = house.country;
+      _rentAmount = house.rentAmount.toString();
+      _ownerName = owner.ownerName;
+      _ownerNumber = ownerNumberField.toString();
+      _bankName = owner.bankName;
+      _bankAccountHolderName = owner.accountHolderName;
+      _bankAccountNumber = owner.bankAccountNumber.toString();
+      _bankIdentifierCode = owner.bankIdentifierCode;
+      _isFormEnabled = false;
     }
   }
 
@@ -81,205 +109,255 @@ class _NewHouseViewState extends State<NewHouseView> {
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)?.settings.arguments;
     // Get the house details when clicked on card and fill the initial values
-    if (arguments != null) {
-      _house = arguments as CloudHouseDetails;
-      _nickname = _house.nickname;
-      _address1 = _house.address1;
-      _address2 = _house.address2;
-      _city = _house.city;
-      _state = _house.state;
-      _country = _house.country;
-      _rentAmount = _house.rentAmount.toString();
-      _isFormEnabled = false;
-    }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'House Details',
-          style: TextStyle(color: secondaryColor),
-        ),
-        shadowColor: Colors.black,
-        elevation: 6,
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-          child: Form(
-            key: _formKey,
+    return FutureBuilder(
+        future: createOrInsertDetails(arguments),
+        builder: ((context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.active:
+            case ConnectionState.done:
+              return Scaffold(
+                appBar: AppBar(
+                  title: const Text(
+                    'House Details',
+                    style: TextStyle(color: secondaryColor),
+                  ),
+                  shadowColor: Colors.black,
+                  elevation: 6,
+                ),
+                body: SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                    child: Form(
+                      key: _formKey,
 
-            // padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                TextFormField(
-                  initialValue: _nickname,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'House Nickname',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _nickname = text),
+                      // padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            initialValue: _nickname,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'House Nickname *',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _nickname = text,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'required';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            initialValue: _address1,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Address 1',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _address1 = text,
+                          ),
+                          TextFormField(
+                            initialValue: _address2,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Address 2',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _address2 = text,
+                          ),
+                          TextFormField(
+                            initialValue: _city,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'City',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _city = text,
+                          ),
+                          TextFormField(
+                            initialValue: _state,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'State',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _state = text,
+                          ),
+                          TextFormField(
+                            initialValue: _country,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Country',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _country = text,
+                          ),
+                          TextFormField(
+                            initialValue: _rentAmount.toString(),
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Rent Amount *',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _rentAmount = text,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'required';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            initialValue: _ownerName,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Owner Name *',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _ownerName = text,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'required';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            initialValue: _ownerNumber,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Owner Number *',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _ownerNumber = text,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'required';
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            initialValue: _bankName,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Bank Name',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _bankName = text,
+                          ),
+                          TextFormField(
+                            initialValue: _country,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Account Holder Name',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _bankAccountHolderName = text,
+                          ),
+                          TextFormField(
+                            initialValue: _country,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Bank Account Number',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _bankAccountNumber = text,
+                          ),
+                          TextFormField(
+                            initialValue: _country,
+                            enabled: _isFormEnabled,
+                            decoration: const InputDecoration(
+                                labelText: 'Bank Identifier Code',
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: houseFormBorderColor)),
+                                labelStyle:
+                                    TextStyle(color: houseFormLabelColor)),
+                            style: const TextStyle(color: houseFormTextColor),
+                            onChanged: (text) => _bankIdentifierCode = text,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          if (_isFormEnabled)
+                            ElevatedButton(
+                                onPressed: () async {
+                                  final bool isSaved = await _save();
+                                  if (isSaved) {
+                                    Navigator.of(context).pop();
+                                  }
+                                  //
+                                },
+                                child: const Text('Save'))
+                          else
+                            ElevatedButton(
+                                onPressed: () async {
+                                  _houseService.deleteHouse(
+                                      documentId: house.documentId);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Delete')),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                TextFormField(
-                  initialValue: _address1,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Address 1',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _address1 = text),
-                ),
-                TextFormField(
-                  initialValue: _address2,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Address 2',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _address2 = text),
-                ),
-                TextFormField(
-                  initialValue: _city,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'City',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _city = text),
-                ),
-                TextFormField(
-                  initialValue: _state,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'State',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _state = text),
-                ),
-                TextFormField(
-                  initialValue: _country,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Country',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _country = text),
-                ),
-                TextFormField(
-                  initialValue: _rentAmount.toString(),
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Rent Amount',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _rentAmount = text),
-                ),
-                TextFormField(
-                  initialValue: _country,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Owner Name',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _ownerName = text),
-                ),
-                TextFormField(
-                  initialValue: _country,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Owner Number',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _ownerNumber = text),
-                ),
-                TextFormField(
-                  initialValue: _country,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Bank Name',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) => setState(() => _bankName = text),
-                ),
-                TextFormField(
-                  initialValue: _country,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Account Holder Name',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) =>
-                      setState(() => _bankAccountHolderName = text),
-                ),
-                TextFormField(
-                  initialValue: _country,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Bank Account Number',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) =>
-                      setState(() => _bankAccountNumber = text),
-                ),
-                TextFormField(
-                  initialValue: _country,
-                  enabled: _isFormEnabled,
-                  decoration: const InputDecoration(
-                      labelText: 'Bank Identifier Code',
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: houseFormBorderColor)),
-                      labelStyle: TextStyle(color: houseFormLabelColor)),
-                  style: const TextStyle(color: houseFormTextColor),
-                  onChanged: (text) =>
-                      setState(() => _bankIdentifierCode = text),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                if (_isFormEnabled)
-                  ElevatedButton(
-                      onPressed: () async {
-                        await _save();
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Save'))
-                else
-                  ElevatedButton(
-                      onPressed: () async {
-                        _houseService.deleteHouse(
-                            documentId: _house.documentId);
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Delete')),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              );
+
+            default:
+              return Container();
+          }
+        }));
   }
 }

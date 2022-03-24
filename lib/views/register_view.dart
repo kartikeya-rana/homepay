@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/constants/routes.dart';
+import 'package:homepay/services/auth/auth_exception.dart';
 import 'package:homepay/services/auth/auth_service.dart';
+import 'package:homepay/utilities/dialogs/error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -39,7 +41,7 @@ class _RegisterViewState extends State<RegisterView> {
             height: 10,
           ),
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(14),
             child: TextFormField(
               controller: _email,
               decoration: const InputDecoration(
@@ -57,7 +59,7 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           const SizedBox(height: 2),
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(14),
             child: TextFormField(
               controller: _password,
               decoration: const InputDecoration(
@@ -88,9 +90,14 @@ class _RegisterViewState extends State<RegisterView> {
                 AuthService.firebase().sendEmailVerification();
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     verifyEmailRoute, (route) => false);
-              } catch (e) {
-                // TODO: Display error dialog
-                print(e);
+              } on WeakPasswordAuthException {
+                await showErrorDialog(context, "Weak password");
+              } on EmailAlreadyInUseAuthException {
+                await showErrorDialog(context, "Email already in use");
+              } on InvalidEmailException {
+                await showErrorDialog(context, "Invalid email");
+              } on GenericAuthException {
+                await showErrorDialog(context, "Failed to register");
               }
             },
             child: const Text('Register'),

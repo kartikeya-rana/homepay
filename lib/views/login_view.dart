@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/constants/routes.dart';
+import 'package:homepay/services/auth/auth_exception.dart';
 import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/services/cloud/collection/cloud_rewards_storage.dart';
+import 'package:homepay/utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -33,22 +35,17 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text(
-        'HomePay',
-        style: TextStyle(
-          color: secondaryColor,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      )),
+        toolbarHeight: 10,
+      ),
       body: Center(
           child: Column(
         children: [
           const SizedBox(
             height: 10,
           ),
+          Image.asset('lib/assets/images/homepay_logo.png'),
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(14),
             child: TextFormField(
               controller: _email,
               decoration: const InputDecoration(
@@ -66,7 +63,7 @@ class _LoginViewState extends State<LoginView> {
           ),
           const SizedBox(height: 2),
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(14),
             child: TextFormField(
               controller: _password,
               decoration: const InputDecoration(
@@ -113,9 +110,21 @@ class _LoginViewState extends State<LoginView> {
                         verifyEmailRoute, (route) => false);
                   }
                 }
-              } catch (e) {
-                // TODO: Implement error dialogs
-                print(e);
+              } on UserNotFoundAuthException {
+                await showErrorDialog(
+                  context,
+                  "User not found",
+                );
+              } on WrongPasswordAuthException {
+                await showErrorDialog(
+                  context,
+                  "Wrong password",
+                );
+              } on GenericAuthException {
+                await showErrorDialog(
+                  context,
+                  "Authentication Error",
+                );
               }
             },
             child: const Text('Login'),

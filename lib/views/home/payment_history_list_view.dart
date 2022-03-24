@@ -16,16 +16,16 @@ class PaymentHistoryListView extends StatelessWidget {
         final DateFormat formatter = DateFormat('dd-MM-yyyy');
 
         return Card(
-          color: Color.fromARGB(255, 22, 27, 39),
+          color: const Color.fromARGB(255, 22, 27, 39),
           shadowColor: Colors.black,
           elevation: 4,
           child: ListTile(
             title: Text(
               'Paid \$ ${payment.amountPaid}',
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
             subtitle: Text(formatter.format(payment.paymentDate),
-                style: TextStyle(color: Colors.white)),
+                style: const TextStyle(color: Colors.white)),
           ),
         );
       },

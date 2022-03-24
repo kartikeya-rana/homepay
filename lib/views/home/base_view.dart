@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/constants/routes.dart';
 import 'package:homepay/services/auth/auth_service.dart';
+import 'package:homepay/utilities/dialogs/logout_dialog.dart';
 import 'package:homepay/views/home/house_view.dart';
 import 'package:homepay/views/home/payment_history_view.dart';
 import 'package:homepay/views/home/reward_view.dart';
@@ -36,10 +37,14 @@ AppBar homeAppBar(BuildContext context) {
                         'Sign Out',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onTap: () {
-                        AuthService.firebase().logOut();
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            loginRoute, (route) => false);
+                      onTap: () async {
+                        Navigator.of(context).pop();
+                        final isLogout = await showLogOutDialog(context);
+                        if (isLogout) {
+                          AuthService.firebase().logOut();
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              loginRoute, (route) => false);
+                        }
                       },
                     ))
               ])
@@ -80,7 +85,7 @@ class _BaseViewState extends State<BaseView> {
     return Scaffold(
       appBar: _appBar.elementAt(_currentIndex),
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: _pages.elementAt(_currentIndex), //New
       ),
       bottomNavigationBar: Container(

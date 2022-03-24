@@ -28,7 +28,7 @@ class CloudOwnerDetails {
       : documentId = snapshot.id,
         userId = snapshot.data()[userIdField] as String,
         ownerName = snapshot.data()[ownerNameField] as String,
-        ownerNumber = snapshot.data()[ownerNumberField] as String,
+        ownerNumber = snapshot.data()[ownerNumberField].toString(),
         accountHolderName =
             snapshot.data()[ownerAccountHolderNameField] as String,
         bankAccountNumber =
@@ -43,7 +43,7 @@ class CloudOwnerDetails {
       : documentId = snapshot.id,
         userId = snapshot[userIdField] as String,
         ownerName = snapshot[ownerNameField] as String,
-        ownerNumber = snapshot[ownerNumberField] as String,
+        ownerNumber = snapshot[ownerNumberField].toString(),
         accountHolderName = snapshot[ownerAccountHolderNameField] as String,
         bankAccountNumber = snapshot[ownerBankAccountNumberField] as String,
         bankIdentifierCode = snapshot[ownerBankIdentifierCodeField] as String,

@@ -103,7 +103,7 @@ class RewardListView extends StatelessWidget {
             ]),
           ]),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Container(
@@ -118,13 +118,13 @@ class RewardListView extends StatelessWidget {
             ],
             borderRadius: BorderRadius.circular(8),
           ),
-          child: ListTile(
-            leading: const Icon(
+          child: const ListTile(
+            leading: Icon(
               Icons.store,
               color: secondaryColor,
               size: 40,
             ),
-            title: const Text(
+            title: Text(
               'Store',
               style: TextStyle(
                   fontSize: 22,

@@ -21,7 +21,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Container(
           decoration: BoxDecoration(
             color: primaryColor,
