@@ -16,6 +16,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  bool _isButtonEnabled = true;
 
   @override
   void initState() {
@@ -37,13 +38,14 @@ class _LoginViewState extends State<LoginView> {
       appBar: AppBar(
         toolbarHeight: 10,
       ),
-      body: Center(
-          child: Column(
+      body: Column(
         children: [
-          const SizedBox(
-            height: 10,
+          Expanded(
+            child: Image.asset(
+              'lib/assets/images/homepay_logo.png',
+              fit: BoxFit.fitHeight,
+            ),
           ),
-          Image.asset('lib/assets/images/homepay_logo.png'),
           Container(
             padding: const EdgeInsets.all(14),
             child: TextFormField(
@@ -61,7 +63,7 @@ class _LoginViewState extends State<LoginView> {
               keyboardType: TextInputType.emailAddress,
             ),
           ),
-          const SizedBox(height: 2),
+          // const SizedBox(height: 2),
           Container(
             padding: const EdgeInsets.all(14),
             child: TextFormField(
@@ -82,51 +84,56 @@ class _LoginViewState extends State<LoginView> {
           ),
           const SizedBox(height: 2),
           ElevatedButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
+            onPressed: _isButtonEnabled
+                ? () async {
+                    setState(() {
+                      _isButtonEnabled = false;
+                    });
+                    final email = _email.text;
+                    final password = _password.text;
 
-              try {
-                await AuthService.firebase()
-                    .logIn(email: email, password: password);
+                    try {
+                      await AuthService.firebase()
+                          .logIn(email: email, password: password);
 
-                final user = AuthService.firebase().currentUser;
+                      final user = AuthService.firebase().currentUser;
 
-                if (user != null) {
-                  if (user.isEmailVerified) {
-                    final CloudRewardsStorage _rewardService =
-                        CloudRewardsStorage();
-                    final rewardNotAvailable =
-                        await _rewardService.isRewardProfile(userId: user.id);
+                      if (user != null) {
+                        if (user.isEmailVerified) {
+                          final CloudRewardsStorage _rewardService =
+                              CloudRewardsStorage();
+                          final rewardNotAvailable = await _rewardService
+                              .isRewardProfile(userId: user.id);
 
-                    if (rewardNotAvailable) {
-                      await _rewardService.createNewUserRewards(
-                          userId: user.id);
+                          if (rewardNotAvailable) {
+                            await _rewardService.createNewUserRewards(
+                                userId: user.id);
+                          }
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              homeRoute, (route) => false);
+                        } else {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              verifyEmailRoute, (route) => false);
+                        }
+                      }
+                    } on UserNotFoundAuthException {
+                      await showErrorDialog(
+                        context,
+                        "User not found",
+                      );
+                    } on WrongPasswordAuthException {
+                      await showErrorDialog(
+                        context,
+                        "Wrong password",
+                      );
+                    } on GenericAuthException {
+                      await showErrorDialog(
+                        context,
+                        "Authentication Error",
+                      );
                     }
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil(homeRoute, (route) => false);
-                  } else {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        verifyEmailRoute, (route) => false);
                   }
-                }
-              } on UserNotFoundAuthException {
-                await showErrorDialog(
-                  context,
-                  "User not found",
-                );
-              } on WrongPasswordAuthException {
-                await showErrorDialog(
-                  context,
-                  "Wrong password",
-                );
-              } on GenericAuthException {
-                await showErrorDialog(
-                  context,
-                  "Authentication Error",
-                );
-              }
-            },
+                : null,
             child: const Text('Login'),
             style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 18)),
@@ -137,9 +144,10 @@ class _LoginViewState extends State<LoginView> {
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(registerRoute, (route) => false);
               },
-              child: const Text('New User? Sign Up'))
+              child: const Text('New User? Sign Up')),
+          const SizedBox(height: 60),
         ],
-      )),
+      ),
     );
   }
 }

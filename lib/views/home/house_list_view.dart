@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details.dart';
 import 'package:homepay/views/home/pay_rent_bottom_sheet_view.dart';
 
@@ -27,25 +26,30 @@ class HousesListView extends StatelessWidget {
             height: 130,
             // padding: const EdgeInsets.all(),
             decoration: BoxDecoration(
-              boxShadow: const <BoxShadow>[
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 4,
-                  spreadRadius: 1.5,
-                ),
-              ],
-              borderRadius: BorderRadius.circular(8),
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    secondaryColor,
-                    Colors.teal.shade700,
-                    primaryColor,
-                    Colors.black45,
-                    Colors.black87,
-                  ]),
-            ),
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 4,
+                    spreadRadius: 1.5,
+                  ),
+                ],
+                borderRadius: BorderRadius.circular(8),
+
+                // gradient: LinearGradient(
+                //     begin: Alignment.topRight,
+                //     end: Alignment.bottomLeft,
+                //     colors: [
+                //       secondaryColor,
+                //       Colors.teal.shade700,
+                //       // primaryColor,
+                //       Colors.black38,
+                //       Colors.black45,
+                //       Colors.black87,
+                //     ]),
+                image: const DecorationImage(
+                    image: AssetImage(
+                        'lib/assets/images/rent_card_background3.jpg'),
+                    fit: BoxFit.cover)),
             child: Card(
               shadowColor: Colors.transparent,
               color: Colors.transparent,
@@ -76,8 +80,11 @@ class HousesListView extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    SizedBox(
-                        child: TextButton(
+                    TextButton(
+                      style: TextButton.styleFrom(
+                          shadowColor: Colors.white,
+                          elevation: 2,
+                          backgroundColor: Colors.black87),
                       child: const Text(
                         'Pay Rent',
                         style: TextStyle(
@@ -95,7 +102,7 @@ class HousesListView extends StatelessWidget {
                               );
                             });
                       },
-                    )),
+                    ),
                   ]),
                 ),
               ),

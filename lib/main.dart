@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/constants/routes.dart';
 import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/views/home/base_view.dart';
@@ -14,13 +15,12 @@ void main() {
     theme: ThemeData(
       primarySwatch: Colors.teal,
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color.fromARGB(255, 22, 27, 39),
+        backgroundColor: primaryColor,
         elevation: 0,
       ),
-      scaffoldBackgroundColor: const Color.fromARGB(255, 22, 27, 39),
+      scaffoldBackgroundColor: primaryColor,
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color.fromARGB(255, 22, 27, 39),
-          unselectedItemColor: Colors.white),
+          backgroundColor: primaryColor, unselectedItemColor: Colors.white),
     ),
     home: const RootPage(),
     routes: {

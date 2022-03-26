@@ -15,6 +15,7 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  bool _isButtonEnabled = true;
 
   @override
   void initState() {
@@ -78,28 +79,30 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           const SizedBox(height: 2),
           ElevatedButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
+            onPressed: _isButtonEnabled
+                ? () async {
+                    final email = _email.text;
+                    final password = _password.text;
 
-              try {
-                await AuthService.firebase().createuser(
-                  email: email,
-                  password: password,
-                );
-                AuthService.firebase().sendEmailVerification();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    verifyEmailRoute, (route) => false);
-              } on WeakPasswordAuthException {
-                await showErrorDialog(context, "Weak password");
-              } on EmailAlreadyInUseAuthException {
-                await showErrorDialog(context, "Email already in use");
-              } on InvalidEmailException {
-                await showErrorDialog(context, "Invalid email");
-              } on GenericAuthException {
-                await showErrorDialog(context, "Failed to register");
-              }
-            },
+                    try {
+                      await AuthService.firebase().createuser(
+                        email: email,
+                        password: password,
+                      );
+                      AuthService.firebase().sendEmailVerification();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          verifyEmailRoute, (route) => false);
+                    } on WeakPasswordAuthException {
+                      await showErrorDialog(context, "Weak password");
+                    } on EmailAlreadyInUseAuthException {
+                      await showErrorDialog(context, "Email already in use");
+                    } on InvalidEmailException {
+                      await showErrorDialog(context, "Invalid email");
+                    } on GenericAuthException {
+                      await showErrorDialog(context, "Failed to register");
+                    }
+                  }
+                : null,
             child: const Text('Register'),
             style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 16)),

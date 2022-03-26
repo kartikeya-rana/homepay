@@ -6,8 +6,11 @@ import 'package:homepay/utilities/dialogs/logout_dialog.dart';
 import 'package:homepay/views/home/house_view.dart';
 import 'package:homepay/views/home/payment_history_view.dart';
 import 'package:homepay/views/home/reward_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 AppBar homeAppBar(BuildContext context) {
+  const feedbackFormUrl = 'https://forms.gle/rw1eBPy25VfrY7qq5';
+
   return AppBar(
     // toolbarHeight: 20,
     actions: [
@@ -45,6 +48,22 @@ AppBar homeAppBar(BuildContext context) {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               loginRoute, (route) => false);
                         }
+                      },
+                    )),
+                PopupMenuItem(
+                    padding: const EdgeInsets.all(0),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.feed,
+                        color: Colors.white,
+                      ),
+                      title: const Text(
+                        'Feedback',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () async {
+                        Navigator.of(context).pop();
+                        await launch(feedbackFormUrl);
                       },
                     ))
               ])

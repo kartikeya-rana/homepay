@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:homepay/services/cloud/collection/cloud_payment_history.dart';
 import 'package:intl/intl.dart';
+import 'package:homepay/constants/colors_constants.dart';
 
 class PaymentHistoryListView extends StatelessWidget {
   const PaymentHistoryListView({Key? key, required this.payments})
@@ -16,9 +17,9 @@ class PaymentHistoryListView extends StatelessWidget {
         final DateFormat formatter = DateFormat('dd-MM-yyyy');
 
         return Card(
-          color: const Color.fromARGB(255, 22, 27, 39),
-          shadowColor: Colors.black,
-          elevation: 4,
+          color: primaryColor,
+          shadowColor: secondaryColor,
+          elevation: 1.5,
           child: ListTile(
             title: Text(
               'Paid \$ ${payment.amountPaid}',

@@ -6,6 +6,7 @@ import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details_storage.dart';
 import 'package:homepay/views/home/house_list_view.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HouseView extends StatefulWidget {
   const HouseView({Key? key}) : super(key: key);
@@ -17,7 +18,6 @@ class HouseView extends StatefulWidget {
 class _HouseViewState extends State<HouseView> {
   late final CloudHouseStorage _houseService;
   String get userId => AuthService.firebase().currentUser!.id;
-  final feedbackFormUrl = 'https://forms.gle/rw1eBPy25VfrY7qq5';
 
   @override
   void initState() {
@@ -49,11 +49,15 @@ class _HouseViewState extends State<HouseView> {
               ],
               borderRadius: BorderRadius.circular(8),
               color: rentalCardBackground),
-          child: const Card(
+          child: Card(
             shadowColor: Colors.transparent,
             color: Colors.transparent,
             child: ListTile(
-                title: Text(
+                leading: Image.asset(
+                  'lib/assets/images/payment-method.png',
+                  fit: BoxFit.contain,
+                ),
+                title: const Text(
                   'Rental Credit Score',
                   style: TextStyle(
                     fontSize: 28,
@@ -61,7 +65,7 @@ class _HouseViewState extends State<HouseView> {
                     color: Colors.teal,
                   ),
                 ),
-                subtitle: Text(
+                subtitle: const Text(
                   'Score is calculated based upon on timely payments, rental history, and rental amount.',
                   style: TextStyle(
                     fontSize: 16,
@@ -69,55 +73,14 @@ class _HouseViewState extends State<HouseView> {
                     overflow: TextOverflow.visible,
                   ),
                 ),
-                contentPadding: EdgeInsets.all(8)),
+                contentPadding: const EdgeInsets.all(8)),
             elevation: 2,
           ),
         ),
         const SizedBox(
           height: 12,
         ),
-        Container(
-          // padding: const EdgeInsets.all(),
-          decoration: BoxDecoration(
-              boxShadow: const <BoxShadow>[
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 4,
-                  spreadRadius: 1.5,
-                ),
-              ],
-              borderRadius: BorderRadius.circular(8),
-              color: rentalCardBackground),
-          child: Card(
-            shadowColor: Colors.transparent,
-            color: Colors.transparent,
-            child: ListTile(
-                title: const Text(
-                  'Google Solution Challenge 2022',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.teal,
-                  ),
-                ),
-                subtitle: const Text(
-                  "This app is created for Google Solution Challenge'22. Kindly share your feedback.",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white54,
-                  ),
-                ),
-                trailing: TextButton(
-                    onPressed: () async {
-                      if (await canLaunch(feedbackFormUrl)) {
-                        await launch(feedbackFormUrl, forceWebView: true);
-                      }
-                    },
-                    child: const Text('Click Here')),
-                contentPadding: const EdgeInsets.all(8)),
-            elevation: 2,
-          ),
-        ),
+
         const SizedBox(
           height: 12,
         ),
@@ -139,9 +102,7 @@ class _HouseViewState extends State<HouseView> {
                         },
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const Center();
                     }
 
                   default:

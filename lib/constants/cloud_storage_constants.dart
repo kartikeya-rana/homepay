@@ -3,11 +3,8 @@ const userIdField = 'user_id';
 // House Details Collection Constants
 const houseCollectionName = 'house_details';
 const houseNicknameField = 'nickname';
-const houseAddress1Field = 'address1';
-const houseAddress2Field = 'address2';
-const houseCityField = 'city';
-const houseStateField = 'state';
-const houseCountryField = 'country';
+const houseAddressField = 'address';
+const houseGeoPoint = 'geo_point';
 const houseRentAmountField = 'rent_amount';
 const houseDueDateField = 'due_date';
 const houseDateCreatedField = 'date_created';

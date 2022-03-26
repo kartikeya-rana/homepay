@@ -4,6 +4,8 @@
         android:label="homepay"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyA9JJ4CN-g_YRb0WzolgEhJz3_c9p3u6eM"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

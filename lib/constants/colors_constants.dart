@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-const primaryColor = Color.fromARGB(255, 22, 27, 39);
+// const primaryColor = Color.fromARGB(255, 22, 27, 39);
+const primaryColor = Color.fromARGB(255, 20, 20, 20);
 const secondaryColor = Colors.teal;
 const dividerColor = Colors.teal;
 

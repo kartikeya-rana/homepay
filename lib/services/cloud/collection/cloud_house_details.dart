@@ -6,11 +6,8 @@ class CloudHouseDetails {
   final String userId;
   final String ownerId;
   final String nickname;
-  final String address1;
-  final String address2;
-  final String city;
-  final String state;
-  final String country;
+  final String address;
+  final GeoPoint geoPoint;
   final int rentAmount;
   final DateTime dueDate;
   final DateTime dateCreated;
@@ -20,11 +17,8 @@ class CloudHouseDetails {
       required this.userId,
       required this.ownerId,
       required this.nickname,
-      required this.address1,
-      required this.address2,
-      required this.city,
-      required this.state,
-      required this.country,
+      required this.address,
+      required this.geoPoint,
       required this.rentAmount,
       required this.dueDate,
       required this.dateCreated});
@@ -35,11 +29,8 @@ class CloudHouseDetails {
         userId = snapshot.data()[userIdField],
         ownerId = snapshot.data()[houseOwnerIdField],
         nickname = snapshot.data()[houseNicknameField] as String,
-        address1 = snapshot.data()[houseAddress1Field] as String,
-        address2 = snapshot.data()[houseAddress2Field] as String,
-        city = snapshot.data()[houseCityField] as String,
-        state = snapshot.data()[houseStateField] as String,
-        country = snapshot.data()[houseCountryField] as String,
+        address = snapshot.data()[houseAddressField] as String,
+        geoPoint = snapshot.data()[houseGeoPoint] as GeoPoint,
         rentAmount = snapshot.data()[houseRentAmountField] as int,
         dueDate = snapshot.data()[houseDueDateField].toDate(),
         dateCreated = snapshot.data()[houseDateCreatedField].toDate();
