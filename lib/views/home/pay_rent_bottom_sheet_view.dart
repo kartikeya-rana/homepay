@@ -21,12 +21,12 @@ class _PayRentBottomSheetViewState extends State<PayRentBottomSheetView> {
   final CloudRewardsStorage _rewardService = CloudRewardsStorage();
   final currentUser = AuthService.firebase().currentUser!;
   final DateTime now = DateTime.now();
+  bool status = true;
 
   @override
   Widget build(BuildContext context) {
     final house = widget.house;
     String _rentAmount = house.rentAmount.toString();
-    bool status = true;
 
     return Wrap(
       children: [
@@ -51,28 +51,32 @@ class _PayRentBottomSheetViewState extends State<PayRentBottomSheetView> {
             child: ElevatedButton(
                 onPressed: status
                     ? () async {
+                        final rentCaptured = int.parse(_rentAmount);
+
                         setState(() {
                           status = false;
                         });
+
                         await _paymentService.createNewPayment(
                             userId: currentUser.id,
                             houseId: house.documentId,
-                            ownerId: '',
-                            amountPaid: int.parse(_rentAmount),
+                            ownerId: house.ownerId,
+                            amountPaid: rentCaptured,
                             paymentDate: now);
                         final rewardDetails = await _rewardService
                             .getRewardDetails(userId: currentUser.id);
 
-                        final int rewardsEarned = int.parse(_rentAmount) +
-                            rewardDetails.rewardsEarned;
+                        final int rewardsEarned =
+                            rentCaptured + rewardDetails.rewardsEarned;
 
                         await _rewardService.updateRewards(
                             documentId: rewardDetails.documentId,
                             rewardsUsed: rewardDetails.rewardsUsed,
                             rewardsEarned: rewardsEarned);
+
                         Navigator.of(context).pop();
-                        await showInfoDialog(
-                            context, "Rent Paid", "Amount \$ $_rentAmount");
+                        await showInfoDialog(context, "Rent Paid",
+                            "Amount \$ ${rentCaptured.toString()}");
                       }
                     : null,
                 child: const Text(

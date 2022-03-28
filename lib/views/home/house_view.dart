@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxShadow, BoxDecoration;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/constants/routes.dart';
@@ -6,7 +6,7 @@ import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details.dart';
 import 'package:homepay/services/cloud/collection/cloud_house_details_storage.dart';
 import 'package:homepay/views/home/house_list_view.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 class HouseView extends StatefulWidget {
   const HouseView({Key? key}) : super(key: key);
@@ -40,15 +40,9 @@ class _HouseViewState extends State<HouseView> {
         Container(
           // padding: const EdgeInsets.all(),
           decoration: BoxDecoration(
-              boxShadow: const <BoxShadow>[
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 4,
-                  spreadRadius: 1.5,
-                ),
-              ],
+              boxShadow: insideShadow,
               borderRadius: BorderRadius.circular(8),
-              color: rentalCardBackground),
+              color: primaryColor),
           child: Card(
             shadowColor: Colors.transparent,
             color: Colors.transparent,
@@ -77,10 +71,6 @@ class _HouseViewState extends State<HouseView> {
             elevation: 2,
           ),
         ),
-        const SizedBox(
-          height: 12,
-        ),
-
         const SizedBox(
           height: 12,
         ),

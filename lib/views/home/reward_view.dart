@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxShadow, BoxDecoration;
 import 'package:homepay/constants/colors_constants.dart';
 import 'package:homepay/services/auth/auth_service.dart';
 import 'package:homepay/services/cloud/collection/cloud_rewards.dart';
 import 'package:homepay/services/cloud/collection/cloud_rewards_storage.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 class RewardView extends StatefulWidget {
   const RewardView({Key? key}) : super(key: key);
@@ -52,13 +53,7 @@ class RewardListView extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: primaryColor,
-            boxShadow: const <BoxShadow>[
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: 2,
-                spreadRadius: 1.5,
-              ),
-            ],
+            boxShadow: insideShadow,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Wrap(children: [
