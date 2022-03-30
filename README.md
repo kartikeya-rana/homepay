@@ -1,16 +1,5 @@
-# homepay
+# HomePay
 
-A new Flutter project.
+HomePay is a rental payment app where a tenant can add a rental property and owner bank details and pay rent online through a debit or credit card. After several rent payments, a rental credit score will be generated, which depends on several factors, such as on-time payments, rent amount, and rental period. 
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The rental credit score will be the core of the application upon which other services will be provided. It can be seen as a badge of trust built by on-time payments and previous rental history that can be shared with new owners and convince them to give their property on rent and even reduce security deposit.
